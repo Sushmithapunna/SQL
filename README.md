@@ -15,7 +15,7 @@ from Activity
 group by player_Id
 Order by event_date ASC
 
-# 1113: Reported Posts
+# 1113: Reported Posts 
 Select extra as report_reason, COUNT(DISTINCT post_id) AS report_count
 FROM Actions
 WHERE action_date = SUBDATE("2019-07-05", INTERVAL 1 DAY) AND extra IS NOT NULL
@@ -27,8 +27,13 @@ from Views
 where author_id = viewer_id
 order by author_id ASC
 
+# 1179. Reformat Department Table(Pivot)
 
 
+# 196. Delete Duplicate Emails
+Delete FROM PERSON
+WHERE Id NOT IN 
+(select x FROM (Select MIN(Id) as x from Person Group by Email)P)
 
 
 
