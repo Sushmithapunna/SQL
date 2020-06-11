@@ -35,6 +35,34 @@ Delete FROM PERSON
 WHERE Id NOT IN 
 (select x FROM (Select MIN(Id) as x from Person Group by Email)P)
 
+# 197. Rising Temperature
+Select Id
+from ((Select Id, Temperature as t, RecordDate as d, 
+    LAG(Temperature, 1) OVER(Order by RecordDate ASC) as t1,
+    LAG(RecordDate,1) OVER(Order by RecordDate ASC) as d1 
+from Weather)) X
+where DateDiff(d,d1) = 1 AND t > t1
 
+# 627. Swap Salary
+UPDATE salary 
+SET sex = case when sex = 'm' then 'f' else 'm' end
 
- 
+# 1211. Queries Quality and Percentage
+Select query_name, 
+ROUND(AVG(rating/position), 2) AS quality, 
+ROUND(100*(SUM(IF((Rating < 3), 1, NULL))/Count(*)), 2) AS Poor_query_percentage 
+FROM Queries
+Group by query_name
+
+# 1141. User Activity for the Past 30 Days I
+Select activity_date as day, Count(distinct user_id) AS active_users
+from Activity
+Group by activity_date
+having Datediff("2019-07-27", activity_date) < 30
+
+# 1142. User Activity for the Past 30 Days II
+Select Round(sum(a)/Sum(b),2) as average_sessions_per_user 
+from (Select Round(Count(distinct session_id),2) as a, (Count(distinct user_id)) as b 
+from Activity Where Datediff("2019-07-27", activity_date) < 30 Group by user_id) 
+N
+
