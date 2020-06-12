@@ -66,3 +66,45 @@ from (Select Round(Count(distinct session_id),2) as a, (Count(distinct user_id))
 from Activity Where Datediff("2019-07-27", activity_date) < 30 Group by user_id) 
 N
 
+# 620. Not Boring Movies
+Select id, movie, description, rating
+from cinema 
+where id % 2 != 0
+AND description != 'boring'
+order by rating desc
+
+# 512. Game Play Analysis II
+Select player_id, device_id
+from (Select player_id, device_id, event_date, rank() Over(Partition by player_id order by event_date ASC) as Rnk from Activity)
+N
+where Rnk = 1
+group by player_id
+
+# 586. Customer Placing the Largest Number of Orders
+Select customer_number
+from (select customer_number, rank() OVER(Order by Count(Order_number) DESC) AS Rnk from Orders group by customer_number) A
+where Rnk = 1
+
+# 577. Employee Bonus
+SELECT e.name, b.bonus
+FROM Employee as e
+LEFT JOIN bonus as b
+ON e.empId = b.empId
+WHERE bonus is null or bonus < 1000 
+
+# 584. Find Customer Referee
+Select name
+from customer 
+where COALESCE(referee_id, 0) <> 2
+
+# 596. Classes More Than 5 Students
+Select class
+from courses
+group by class
+having count(student) >= 5
+
+# 603. Consecutive Available Seats
+select seat_id 
+from cinema 
+where free = 1 
+AND seat_id - 1 != 0
